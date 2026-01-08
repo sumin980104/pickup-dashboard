@@ -54,8 +54,18 @@ stored_files = sorted([
 
 if stored_files:
     for file_name in stored_files:
-        col1, col2 = st.columns([8, 2])
+        file_path = os.path.join(UPLOAD_DIR, file_name)
+        col1, col2, col3 = st.columns([6, 2, 2])
         col1.write(f"📄 {file_name}")
+        # 🔽 다운로드 버튼 (원본 파일)
+        with open(file_path, "rb") as f:
+            col2.download_button(
+                label="⬇️ 다운로드",
+                data=f,
+                file_name=file_name,
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                key=f"download_{file_name}"
+            )
         if col2.button("❌ 삭제", key=f"del_{file_name}"):
             os.remove(os.path.join(UPLOAD_DIR, file_name))
             st.rerun()
